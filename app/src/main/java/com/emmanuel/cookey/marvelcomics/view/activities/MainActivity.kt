@@ -53,11 +53,6 @@ class MainActivity : BaseActivity() {
                             action(getString(R.string.ok)) {
                             }
                         }
-                    is MainViewModel.Event.ShowErrorMessage ->
-                        mainLayout.snack((event.error.localizedMessage), Snackbar.LENGTH_LONG) {
-                            action(getString(R.string.ok)) {
-                            }
-                        }
 
                 }
             }
