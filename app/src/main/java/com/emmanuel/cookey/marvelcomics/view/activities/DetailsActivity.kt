@@ -45,9 +45,9 @@ class DetailsActivity : AppCompatActivity() {
 
 
         if (comic != null) {
-            detail_comic_title.text = comic.title?:"Not Available"
+            detail_comic_title.text = comic.getComicTitle()
 
-            detail_comic_description.text = comic.formatedDestricptionText()
+            detail_comic_description.text = HtmlCompat.fromHtml(comic.getComicDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
 
 
 

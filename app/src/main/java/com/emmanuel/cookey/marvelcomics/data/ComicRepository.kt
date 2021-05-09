@@ -67,7 +67,7 @@ class ComicRepository @Inject constructor(
     )
 
 
-    private fun processDataToDatabaseModel(comicResponse: ComicResponse): List<Comic>{
+    fun processDataToDatabaseModel(comicResponse: ComicResponse): List<Comic>{
         return comicResponse.data!!.results!!.map { comic ->
             Comic(comic.id,
                 comic.title,

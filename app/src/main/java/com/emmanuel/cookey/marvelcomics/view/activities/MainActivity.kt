@@ -38,15 +38,37 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initialzedRecyclerview()
+        loadViewModelData()
+
+
+    }
+
+
+    private fun initialzedRecyclerview(){
         comicsRecyclerView.apply {
             adapter = adapterComic
             layoutManager = GridLayoutManager(this@MainActivity, 4, GridLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
+    }
+
+    private fun loadViewModelData(){
 
 
         lifecycleScope.launchWhenStarted{
-            getAPI()
+            viewModel.comics.collect {
+
+                val result = it ?: return@collect
+
+                result.data?.let { adapterComic.setComics(it) }
+
+                progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+                text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+                text_view_error.text = result.error?.localizedMessage
+
+            }
         }
 
 
@@ -63,22 +85,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-    }
 
-    suspend fun getAPI(){
-
-        viewModel.comics.collect {
-
-            val result = it ?: return@collect
-
-            result.data?.let { adapterComic.setComics(it) }
-
-            progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-            text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-            text_view_error.text = result.error?.localizedMessage
-
-
-        }
     }
 
 

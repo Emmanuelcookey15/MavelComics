@@ -17,8 +17,12 @@ data class Comic (
     var description: String? = null
 ): Parcelable {
 
-    fun formatedDestricptionText(): String {
-        return HtmlCompat.fromHtml(description?:"Not Available", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+    fun getComicTitle(): String {
+        return title?:"Title Not Available"
+    }
+
+    fun getComicDescription(): String {
+        return description?:"Description Not Available"
     }
 
 }
