@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import android.os.Parcelable
+import androidx.core.text.HtmlCompat
 
 @Parcelize
 @Entity(tableName = "comic_table")
@@ -14,4 +15,10 @@ data class Comic (
     var title: String? = null,
     var image: String? = null,
     var description: String? = null
-): Parcelable
+): Parcelable {
+
+    fun formatedDestricptionText(): String {
+        return HtmlCompat.fromHtml(description?:"Not Available", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+    }
+
+}

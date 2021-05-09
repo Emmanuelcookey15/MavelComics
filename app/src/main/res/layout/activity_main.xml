@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mainLayout"
+    android:background="@drawable/mavel_background"
     tools:context=".view.activities.MainActivity">
 
     <include
@@ -12,7 +13,8 @@
         layout="@layout/toolbar_view_custom_layout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -51,7 +53,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
+        tools:listitem="@layout/comic_item"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

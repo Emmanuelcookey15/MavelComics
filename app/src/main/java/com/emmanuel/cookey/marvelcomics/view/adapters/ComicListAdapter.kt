@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.emmanuel.cookey.marvelcomics.R
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import kotlinx.android.synthetic.main.comic_item.view.*
@@ -33,7 +34,10 @@ class ComicListAdapter(private val comics: MutableList<Comic>,
     inner class ComicHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(comic: Comic, position: Int) = with(view) {
-            text_view_title.text = comic.title
+
+            Glide.with(view)
+                .load(comic.image)
+                .into(view_image)
             view.setOnClickListener { listener(comics.get(position)) }
 
         }

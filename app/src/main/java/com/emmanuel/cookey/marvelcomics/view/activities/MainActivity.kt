@@ -1,11 +1,14 @@
 package com.emmanuel.cookey.marvelcomics.view.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emmanuel.cookey.marvelcomics.R
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
@@ -37,8 +40,10 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         comicsRecyclerView.apply {
             adapter = adapterComic
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = GridLayoutManager(this@MainActivity, 4, GridLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
         }
+
 
         lifecycleScope.launchWhenStarted{
             getAPI()
@@ -78,11 +83,16 @@ class MainActivity : BaseActivity() {
 
 
     override fun getToolbarInstance(): Toolbar? {
+        toolbar.visibility = GONE
         return toolbar
     }
 
 
     private fun gotoDetailActivity(comic: Comic) {
+        val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+        intent.putExtra("comic", comic)
+        startActivity(intent)
+
 
     }
 

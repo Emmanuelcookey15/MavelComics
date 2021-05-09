@@ -15,6 +15,7 @@ interface ComicApi {
     @GET("comics")
     suspend fun fetchAllComic(@Query("ts") ts: String,
                       @Query("apikey") apikey: String,
-                      @Query("hash") hash: String): ComicResponse
+                      @Query("hash") hash: String,
+                              @Query("limit") limit: String): ComicResponse
 
 }

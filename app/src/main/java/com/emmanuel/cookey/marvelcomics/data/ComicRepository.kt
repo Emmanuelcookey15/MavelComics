@@ -1,9 +1,9 @@
 package com.emmanuel.cookey.marvelcomics.data
 
-import android.util.Log
 import androidx.room.withTransaction
 import com.emmanuel.cookey.marvelcomics.data.db.ComicDatabase
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
+import com.emmanuel.cookey.marvelcomics.data.model.ComicResponse
 import com.emmanuel.cookey.marvelcomics.data.net.ComicApi
 import com.emmanuel.cookey.marvelcomics.util.Resource
 import com.emmanuel.cookey.marvelcomics.util.networkBoundResource
@@ -27,6 +27,7 @@ class ComicRepository @Inject constructor(
         val ts = Timestamp(System.currentTimeMillis()).time.toString()
         const val apiKey = "bd3e5f7dfd9651a8fdce66eabc847b83"
         const val privateKey = "1d0267234c37891877aa588728f63155b57007e5"
+        const val limit = "100"
 
         fun md5(): String {
             val input = "$ts$privateKey$apiKey"
@@ -45,17 +46,12 @@ class ComicRepository @Inject constructor(
         },
         fetch = {
             delay(2000)
-            api.fetchAllComic(ts, apiKey, md5())
+            api.fetchAllComic(ts, apiKey, md5(), limit)
         },
         saveFetchResult = {
 
-            val comicList = it.data!!.results!!.map { comic ->
-                    Comic(comic.id,
-                        comic.title,
-                        "${comic.thumbnail?.path}.${comic.thumbnail?.extension}",
-                        comic.description)
+            val comicList = processDataToDatabaseModel(it)
 
-            }
             db.withTransaction {
                 comicDao.deleteAllComics()
                 comicDao.insertComics(comicList)
@@ -70,25 +66,18 @@ class ComicRepository @Inject constructor(
         }
     )
 
-    suspend fun fetchAllComic(): List<Comic> {
-        val comicResponse = api.fetchAllComic(ts, apiKey, md5())
-        val comicResult = comicResponse.data?.results
-        val comicList = mutableListOf<Comic>()
-        if (comicResult != null) {
-            for (comic in comicResult){
-                comicList.add(
-                    Comic(comic.id,
-                        comic.title,
-                        "${comic.thumbnail?.path}.${comic.thumbnail?.extension}",
-                    comic.description))
-            }
-            Log.d("SuceessfullyFetched", "TRUE")
-        }else {
-            Log.d("SuceessfullyFetched", "FALSE")
-        }
-        return comicList
 
+    private fun processDataToDatabaseModel(comicResponse: ComicResponse): List<Comic>{
+        return comicResponse.data!!.results!!.map { comic ->
+            Comic(comic.id,
+                comic.title,
+                "${comic.thumbnail?.path}.${comic.thumbnail?.extension}",
+                comic.description)
+
+        }
     }
+
+
 
 
 
