@@ -77,12 +77,16 @@ class MainActivity : BaseActivity() {
                 text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
 
                 if (text_view_error.isVisible){
-                    if (result.error!!.localizedMessage.contains("")){
-
+                    val error = result.error!!.localizedMessage?:"Please Again Later"
+                    if (error.contains(getString(R.string.no_internet_connection_error))){
+                        text_view_error.text = getString(R.string.connect_to_network_provider)
+                    }
+                    else{
+                        text_view_error.text = result.error.localizedMessage
                     }
 
                 }
-                text_view_error.text = result.error?.localizedMessage
+
             }
         }
 
