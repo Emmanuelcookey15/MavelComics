@@ -77,7 +77,7 @@ class MainActivity : BaseActivity() {
                 text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
 
                 if (text_view_error.isVisible){
-                    when (result.error!!.localizedMessage){
+                    if (result.error!!.localizedMessage.contains("")){
 
                     }
 
