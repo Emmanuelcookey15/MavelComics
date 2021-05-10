@@ -61,37 +61,6 @@ class MainActivity : BaseActivity() {
             setHasFixedSize(true)
         }
 
-//        var swipeDirs: Int = if (gridColumnCount > 4) {
-//             0
-//        } else {
-//           ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-//        }
-//        val helper = ItemTouchHelper(
-//            object : ItemTouchHelper.SimpleCallback(
-//                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-//                ItemTouchHelper.LEFT
-//            ) {
-//                override fun onMove(
-//                    recyclerView: RecyclerView,
-//                    viewHolder: ViewHolder, target: ViewHolder
-//                ): Boolean {
-//                    val fromPos = viewHolder.adapterPosition
-//                    val toPos = target.adapterPosition
-//                    // move item in `fromPos` to `toPos` in adapter.
-//                    return true // true if moved, false otherwise
-//                }
-//
-//                override fun onSwiped(
-//                    viewHolder: ViewHolder,
-//                    direction: Int
-//                ) {
-//                    // remove from adapter
-//                }
-//            })
-
-
-
-
     }
 
     private fun loadViewModelData(){
