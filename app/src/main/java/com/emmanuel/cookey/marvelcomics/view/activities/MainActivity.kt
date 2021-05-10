@@ -6,10 +6,11 @@ import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.emmanuel.cookey.marvelcomics.R
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import com.emmanuel.cookey.marvelcomics.util.Resource
@@ -23,14 +24,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar_view_custom_layout.*
 import kotlinx.coroutines.flow.collect
 
+
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     private val toolbar: Toolbar by lazy { toolbar_toolbar_view as Toolbar }
 
+    override fun getToolbarInstance(): Toolbar? {
+        toolbar.visibility = GONE
+        return toolbar
+    }
+
     private val adapterComic = ComicListAdapter(mutableListOf()) { comic -> gotoDetailActivity(comic) }
-
-
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -41,17 +46,52 @@ class MainActivity : BaseActivity() {
 
         initialzedRecyclerview()
         loadViewModelData()
-
-
     }
 
 
+
+
     private fun initialzedRecyclerview(){
+
+        val gridColumnCount = resources.getInteger(R.integer.grid_column_count)
+
         comicsRecyclerView.apply {
             adapter = adapterComic
-            layoutManager = GridLayoutManager(this@MainActivity, 4, GridLayoutManager.HORIZONTAL, false)
+            layoutManager = GridLayoutManager(this@MainActivity, gridColumnCount, GridLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
+
+//        var swipeDirs: Int = if (gridColumnCount > 4) {
+//             0
+//        } else {
+//           ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+//        }
+//        val helper = ItemTouchHelper(
+//            object : ItemTouchHelper.SimpleCallback(
+//                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+//                ItemTouchHelper.LEFT
+//            ) {
+//                override fun onMove(
+//                    recyclerView: RecyclerView,
+//                    viewHolder: ViewHolder, target: ViewHolder
+//                ): Boolean {
+//                    val fromPos = viewHolder.adapterPosition
+//                    val toPos = target.adapterPosition
+//                    // move item in `fromPos` to `toPos` in adapter.
+//                    return true // true if moved, false otherwise
+//                }
+//
+//                override fun onSwiped(
+//                    viewHolder: ViewHolder,
+//                    direction: Int
+//                ) {
+//                    // remove from adapter
+//                }
+//            })
+
+
+
+
     }
 
     private fun loadViewModelData(){
@@ -66,8 +106,14 @@ class MainActivity : BaseActivity() {
 
                 progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
                 text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-                text_view_error.text = result.error?.localizedMessage
 
+                if (text_view_error.isVisible){
+                    when (result.error!!.localizedMessage){
+
+                    }
+
+                }
+                text_view_error.text = result.error?.localizedMessage
             }
         }
 
@@ -80,19 +126,11 @@ class MainActivity : BaseActivity() {
                             action(getString(R.string.ok)) {
                             }
                         }
-
                 }
             }
         }
-
-
     }
 
-
-    override fun getToolbarInstance(): Toolbar? {
-        toolbar.visibility = GONE
-        return toolbar
-    }
 
 
     private fun gotoDetailActivity(comic: Comic) {

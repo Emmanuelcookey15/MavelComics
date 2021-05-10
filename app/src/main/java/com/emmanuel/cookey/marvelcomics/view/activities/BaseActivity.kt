@@ -11,5 +11,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun initView(toolbar: Toolbar) = setSupportActionBar(toolbar)
 
+
     abstract fun getToolbarInstance(): Toolbar?
 }

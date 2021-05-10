@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -15,9 +16,19 @@ import com.emmanuel.cookey.marvelcomics.R
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_details.*
+import kotlinx.android.synthetic.main.toolbar_view_custom_layout.*
 
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsActivity : BaseActivity() {
+
+
+    private val toolbar: Toolbar by lazy { toolbar_toolbar_view as Toolbar }
+
+    override fun getToolbarInstance(): Toolbar? {
+        toolbar.visibility = View.GONE
+        return toolbar
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
@@ -26,13 +37,12 @@ class DetailsActivity : AppCompatActivity() {
 
         setUpViews(comicDataFromMain)
 
-//        BitmapDrawable(context.getResources(), attr.bitmap)
     }
 
 
 
-    fun setUpViews(comic: Comic?){
 
+    fun setUpViews(comic: Comic?){
         val radius = 20f
         val decorView: View = window.decorView
         val windowBackground: Drawable = decorView.getBackground()
