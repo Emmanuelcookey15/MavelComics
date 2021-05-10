@@ -94,11 +94,19 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    is MainViewModel.Event.ShowErrorMessage  ->
-                        mainLayout.snack((event.error.localizedMessage), Snackbar.LENGTH_LONG) {
+                    is MainViewModel.Event.ShowErrorMessage  -> {
+                        val error = if (event.error.localizedMessage.contains(getString(R.string.no_internet_connection_error))){
+                            getString(R.string.connect_to_network_provider)
+                        }
+                        else{
+                            event.error.localizedMessage
+                        }
+                        mainLayout.snack((error), Snackbar.LENGTH_LONG) {
                             action(getString(R.string.ok)) {
                             }
                         }
+
+                    }
                 }
             }
         }
