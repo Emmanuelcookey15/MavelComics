@@ -1,4 +1,4 @@
-# Address_Book_app
+# Marvel Comics App
 
 This is a project that builds an app that allows the user to scroll through all the comics ever released and view details for each comic.
 
