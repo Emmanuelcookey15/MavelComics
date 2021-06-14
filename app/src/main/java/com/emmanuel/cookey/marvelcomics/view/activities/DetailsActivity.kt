@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.toolbar_view_custom_layout.*
 class DetailsActivity : BaseActivity() {
 
 
+
     private val toolbar: Toolbar by lazy { toolbar_toolbar_view as Toolbar }
 
     override fun getToolbarInstance(): Toolbar? {

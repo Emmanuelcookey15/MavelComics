@@ -39,7 +39,6 @@ class MainActivity : BaseActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -118,15 +117,11 @@ class MainActivity : BaseActivity() {
         val intent = Intent(this@MainActivity, DetailsActivity::class.java)
         intent.putExtra("comic", comic)
         startActivity(intent)
-
-
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.onStart()
     }
-
-
 
 }
