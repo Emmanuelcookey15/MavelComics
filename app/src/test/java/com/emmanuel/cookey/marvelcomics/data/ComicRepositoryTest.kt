@@ -20,22 +20,22 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class ComicRepositoryTest {
 
-    private lateinit var repository: ComicRepository
-
-    @Mock
-    lateinit var api: ComicApi
-
-    @Mock
-    lateinit var db: ComicDatabase
-
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
-
-
-    @Before
-    fun setup(){
-        repository = ComicRepository(api, db)
-    }
+//    private lateinit var repository: ComicRepository
+//
+//    @Mock
+//    lateinit var api: ComicApi
+//
+//    @Mock
+//    lateinit var db: ComicDatabase
+//
+//    @get:Rule
+//    var rule: TestRule = InstantTaskExecutorRule()
+//
+//
+//    @Before
+//    fun setup(){
+//        repository = ComicRepository(api, db)
+//    }
 
 
 
