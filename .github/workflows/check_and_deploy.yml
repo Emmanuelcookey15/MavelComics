@@ -26,7 +26,7 @@ jobs:
         with:
           api-level: 29
           script: ./gradlew connectedAndroidTest
-
+jobs:
   build:
     needs: [ unit_tests, android_tests ]
     runs-on: ubuntu-latest
