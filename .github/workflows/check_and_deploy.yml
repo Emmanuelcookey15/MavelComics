@@ -37,3 +37,22 @@ jobs:
         with:
           name: mapping.txt
           path: app/build/outputs/mapping/release/mapping.txt
+
+  unit_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Unit tests
+        run: ./gradlew test
+    ## 4
+    android_tests:
+      runs-on: [ macos-latest ]
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Instrumentation Tests
+          uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 29
+            script: ./gradlew connectedAndroidTest
