@@ -43,5 +43,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
       - name: Unit tests
-        run: ./gradlew clean testDebug
+        run: ./gradlew test
