@@ -39,14 +39,14 @@ class ComicRepositoryTest {
 
 
 
-    @Test
-    fun `test that the ComicResponse Model from ComicApi call is being proccessed to List of Comic Model as represented in Database`(){
-
-        val comicResponse = ComicResponse(200, ComicData(0, 100, 48635, 100, mutableListOf<ComicResult>()))
-
-        assertEquals(repository.processDataToDatabaseModel(comicResponse), mutableListOf<Comic>())
-
-    }
+//    @Test
+//    fun `test that the ComicResponse Model from ComicApi call is being proccessed to List of Comic Model as represented in Database`(){
+//
+//        val comicResponse = ComicResponse(200, ComicData(0, 100, 48635, 100, mutableListOf<ComicResult>()))
+//
+//        assertEquals(repository.processDataToDatabaseModel(comicResponse), mutableListOf<Comic>())
+//
+//    }
 
 
 
