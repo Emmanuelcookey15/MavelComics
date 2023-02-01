@@ -9,6 +9,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import com.emmanuel.cookey.marvelcomics.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
@@ -17,24 +19,29 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
 @ExperimentalCoroutinesApi
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 @SmallTest
 class ComicDaoTest {
 
     @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var comicDatabase: ComicDatabase
+    @Inject
+    @Named("test_db")
+    lateinit var comicDatabase: ComicDatabase
+
     private lateinit var comicDao: ComicDao
 
     @Before
     fun setUp(){
-        comicDatabase = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            ComicDatabase::class.java
-        ).allowMainThreadQueries().build()
+        hiltRule.inject()
         comicDao = comicDatabase.comicDao()
     }
 

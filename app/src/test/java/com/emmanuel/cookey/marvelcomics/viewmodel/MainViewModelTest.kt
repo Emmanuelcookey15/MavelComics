@@ -2,7 +2,7 @@ package com.emmanuel.cookey.marvelcomics.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emmanuel.cookey.marvelcomics.MainCoroutineRule
-import com.emmanuel.cookey.marvelcomics.data.FakeRepository
+import com.emmanuel.cookey.marvelcomics.data.repositories.FakeRepository
 import com.emmanuel.cookey.marvelcomics.data.model.Resource
 import com.emmanuel.cookey.marvelcomics.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat

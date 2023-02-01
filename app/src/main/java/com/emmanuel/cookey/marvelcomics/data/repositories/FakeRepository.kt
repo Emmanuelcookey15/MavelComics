@@ -1,4 +1,4 @@
-package com.emmanuel.cookey.marvelcomics.data
+package com.emmanuel.cookey.marvelcomics.data.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

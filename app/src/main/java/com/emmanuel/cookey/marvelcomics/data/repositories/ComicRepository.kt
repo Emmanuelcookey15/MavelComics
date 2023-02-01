@@ -1,8 +1,9 @@
-package com.emmanuel.cookey.marvelcomics.data
+package com.emmanuel.cookey.marvelcomics.data.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.room.withTransaction
 import com.emmanuel.cookey.marvelcomics.BuildConfig
+import com.emmanuel.cookey.marvelcomics.data.ComicMapper
 import com.emmanuel.cookey.marvelcomics.data.db.ComicDatabase
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import com.emmanuel.cookey.marvelcomics.data.model.ComicResponse
@@ -20,6 +21,7 @@ import javax.inject.Inject
 
 class ComicRepository @Inject constructor(
     private val api: ComicApi,
+    private val mapper: ComicMapper,
     private val db: ComicDatabase
 ): IComicRepository {
 
@@ -39,54 +41,13 @@ class ComicRepository @Inject constructor(
     }
 
 
-    fun getComics(
-        onFetchSuccess: () -> Unit,
-        onFetchFailed: (Throwable) -> Unit
-    ): Flow<Resource<List<Comic>>> = networkBoundResource(
-        query = {
-            comicDao.getAll()
-        },
-        fetch = {
-            delay(2000)
-            api.fetchAllComic(ts, apiKey, md5(), limit)
-        },
-        saveFetchResult = {
-
-            val comicList = processDataToDatabaseModel(it)
-
-            db.withTransaction {
-                comicDao.deleteAllComics()
-                comicDao.insertComics(comicList)
-            }
-        },
-        onFetchSuccess = onFetchSuccess,
-        onFetchFailed = { t ->
-            if (t !is HttpException && t !is IOException) {
-                throw t
-            }
-            onFetchFailed(t)
-        }
-    )
-
-
-    fun processDataToDatabaseModel(comicResponse: ComicResponse): List<Comic>{
-        return comicResponse.data!!.results!!.map { comic ->
-            Comic(comic.id,
-                comic.title,
-                "${comic.thumbnail?.path}.${comic.thumbnail?.extension}",
-                comic.description)
-
-        }
-    }
-
-
     override suspend fun fetchComics(): com.emmanuel.cookey.marvelcomics.data.model.Resource<List<Comic>> {
         return try {
             val response = api.fetchAllComics(ts, apiKey, md5(), limit)
 
             if (response.isSuccessful){
                 response.body()?.let {
-                    return@let com.emmanuel.cookey.marvelcomics.data.model.Resource.Success(processDataToDatabaseModel(it))
+                    return@let com.emmanuel.cookey.marvelcomics.data.model.Resource.Success(mapper.processDataToDatabaseModel(it))
                 }?: com.emmanuel.cookey.marvelcomics.data.model.Resource.Error("An unknown error occurred", null)
             }else{
                 com.emmanuel.cookey.marvelcomics.data.model.Resource.Error("An unknown error occurred", null)

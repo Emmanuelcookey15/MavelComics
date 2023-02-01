@@ -2,8 +2,9 @@ package com.emmanuel.cookey.marvelcomics.di
 
 import android.app.Application
 import androidx.room.Room
-import com.emmanuel.cookey.marvelcomics.data.ComicRepository
-import com.emmanuel.cookey.marvelcomics.data.IComicRepository
+import com.emmanuel.cookey.marvelcomics.data.ComicMapper
+import com.emmanuel.cookey.marvelcomics.data.repositories.ComicRepository
+import com.emmanuel.cookey.marvelcomics.data.repositories.IComicRepository
 import com.emmanuel.cookey.marvelcomics.data.db.ComicDatabase
 import com.emmanuel.cookey.marvelcomics.data.net.ComicApi
 import dagger.Module
@@ -37,8 +38,9 @@ object AppModule {
     @Provides
     fun provideDefaultShoppingRepository(
         api: ComicApi,
+        mapper: ComicMapper,
         db: ComicDatabase
-    ) = ComicRepository(api, db) as IComicRepository
+    ) = ComicRepository(api, mapper, db) as IComicRepository
 
 
 

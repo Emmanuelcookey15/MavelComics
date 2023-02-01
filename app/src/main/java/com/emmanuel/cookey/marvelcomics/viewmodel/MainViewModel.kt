@@ -1,8 +1,7 @@
 package com.emmanuel.cookey.marvelcomics.viewmodel
 
 import androidx.lifecycle.*
-import com.emmanuel.cookey.marvelcomics.data.ComicRepository
-import com.emmanuel.cookey.marvelcomics.data.IComicRepository
+import com.emmanuel.cookey.marvelcomics.data.repositories.IComicRepository
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import com.emmanuel.cookey.marvelcomics.data.model.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
