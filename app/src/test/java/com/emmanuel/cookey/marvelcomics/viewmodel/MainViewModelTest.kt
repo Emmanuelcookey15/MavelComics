@@ -6,11 +6,13 @@ import com.emmanuel.cookey.marvelcomics.data.repositories.FakeRepository
 import com.emmanuel.cookey.marvelcomics.data.model.Resource
 import com.emmanuel.cookey.marvelcomics.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
 
 
