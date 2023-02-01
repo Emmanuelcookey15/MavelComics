@@ -2,6 +2,8 @@ package com.emmanuel.cookey.marvelcomics.di
 
 import android.app.Application
 import androidx.room.Room
+import com.emmanuel.cookey.marvelcomics.data.ComicRepository
+import com.emmanuel.cookey.marvelcomics.data.IComicRepository
 import com.emmanuel.cookey.marvelcomics.data.db.ComicDatabase
 import com.emmanuel.cookey.marvelcomics.data.net.ComicApi
 import dagger.Module
@@ -30,6 +32,14 @@ object AppModule {
     @Singleton
     fun provideComicApi(retrofit: Retrofit): ComicApi =
         retrofit.create(ComicApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideDefaultShoppingRepository(
+        api: ComicApi,
+        db: ComicDatabase
+    ) = ComicRepository(api, db) as IComicRepository
+
 
 
     @Provides

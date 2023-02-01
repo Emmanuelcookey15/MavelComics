@@ -1,67 +1,41 @@
 package com.emmanuel.cookey.marvelcomics.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.emmanuel.cookey.marvelcomics.data.ComicRepository
-import com.emmanuel.cookey.marvelcomics.util.Resource
+import com.emmanuel.cookey.marvelcomics.data.IComicRepository
+import com.emmanuel.cookey.marvelcomics.data.model.Comic
+import com.emmanuel.cookey.marvelcomics.data.model.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: ComicRepository
+    private val repository: IComicRepository
 ) : ViewModel() {
 
-    private val eventChannel = Channel<Event>()
-    val events = eventChannel.receiveAsFlow()
+    val comics = repository.observeComics()
 
-    private val refreshTriggerChannel = Channel<Unit>()
-    private val refreshTrigger = refreshTriggerChannel.receiveAsFlow()
-
-    var pendingScrollToTopAfterRefresh = false
+    private val _insertComics = MutableLiveData<Resource<List<Comic>>>()
+    val insertComics: LiveData<Resource<List<Comic>>> = _insertComics
 
 
-    val comics = refreshTrigger.flatMapLatest {
-        repository.getComics(
-            onFetchSuccess = {
-                pendingScrollToTopAfterRefresh = true
-            },
-            onFetchFailed = { t ->
-                viewModelScope.launch { eventChannel.send(Event.ShowErrorMessage(t)) }
-            }
-        )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-
-    fun onStart() {
-        if (comics.value !is Resource.Loading) {
-            viewModelScope.launch {
-                refreshTriggerChannel.send(Unit)
-            }
-        }
+    fun insertComicsToDB(comics: List<Comic>) = viewModelScope.launch {
+        repository.insertComics(comics)
     }
 
-    fun onManualRefresh() {
-        if (comics.value !is Resource.Loading) {
-            viewModelScope.launch {
-                refreshTriggerChannel.send(Unit)
-            }
-        }
+     fun deleteComics(comics: List<Comic>)  = viewModelScope.launch {
+        repository.deleteAllComic()
     }
 
 
-    sealed class Event {
-        data class ShowErrorMessage(val error: Throwable) : Event()
+    fun fetchComics() = viewModelScope.launch {
+        val data = repository.fetchComics()
+        _insertComics.postValue(data)
     }
 
 
-//    val comics = repository.getComics().asLiveData()
+
 
 }

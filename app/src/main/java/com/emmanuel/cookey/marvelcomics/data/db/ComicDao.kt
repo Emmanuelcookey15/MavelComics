@@ -30,6 +30,7 @@
 
 package com.emmanuel.cookey.marvelcomics.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,9 @@ interface ComicDao {
 
   @Query("SELECT * FROM comic_table")
   fun getAll(): Flow<List<Comic>>
+
+  @Query("SELECT * FROM comic_table")
+  fun getAllComics(): LiveData<List<Comic>>
 
   @Query("DELETE FROM comic_table")
   suspend fun deleteAllComics()

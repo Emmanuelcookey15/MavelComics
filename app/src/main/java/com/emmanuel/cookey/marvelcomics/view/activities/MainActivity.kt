@@ -6,6 +6,7 @@ import android.view.View.GONE
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.emmanuel.cookey.marvelcomics.R
 import com.emmanuel.cookey.marvelcomics.data.model.Comic
-import com.emmanuel.cookey.marvelcomics.util.Resource
+import com.emmanuel.cookey.marvelcomics.data.model.Resource
 import com.emmanuel.cookey.marvelcomics.util.action
 import com.emmanuel.cookey.marvelcomics.util.snack
 import com.emmanuel.cookey.marvelcomics.view.adapters.ComicListAdapter
@@ -44,6 +45,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         initialzedRecyclerview()
+        viewModel.fetchComics()
         loadViewModelData()
     }
 
@@ -64,51 +66,34 @@ class MainActivity : BaseActivity() {
 
     private fun loadViewModelData(){
 
-
-        lifecycleScope.launchWhenStarted{
-            viewModel.comics.collect {
-
-                val result = it ?: return@collect
-
-                result.data?.let { adapterComic.setComics(it) }
-
-                progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-                text_view_error.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-
-                if (text_view_error.isVisible){
-                    val error = result.error!!.localizedMessage?:"Please Again Later"
-                    if (error.contains(getString(R.string.no_internet_connection_error))){
-                        text_view_error.text = getString(R.string.connect_to_network_provider)
-                    }
-                    else{
-                        text_view_error.text = result.error.localizedMessage
-                    }
-
+        viewModel.insertComics.observe(this, Observer {
+            when(it.status){
+                Resource.Status.SUCCESS -> {
+                    progressBar.isVisible = false
+                    text_view_error.isVisible = false
+                    it.data?.let { comics -> viewModel.insertComicsToDB(comics) }
                 }
-
-            }
-        }
-
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    is MainViewModel.Event.ShowErrorMessage  -> {
-                        val error = if (event.error.localizedMessage.contains(getString(R.string.no_internet_connection_error))){
-                            getString(R.string.connect_to_network_provider)
+                Resource.Status.ERROR -> {
+                    progressBar.isVisible = false
+                    text_view_error.isVisible = true
+                    text_view_error.text = it.error
+                    mainLayout.snack((it.error?:"Error"), Snackbar.LENGTH_LONG) {
+                        action(getString(R.string.ok)) {
                         }
-                        else{
-                            event.error.localizedMessage
-                        }
-                        mainLayout.snack((error), Snackbar.LENGTH_LONG) {
-                            action(getString(R.string.ok)) {
-                            }
-                        }
-
                     }
                 }
+                Resource.Status.LOADING -> {
+                    progressBar.isVisible = true
+                    text_view_error.isVisible = false
+                }
             }
-        }
+
+        })
+
+
+        viewModel.comics.observe(this, Observer {
+            it?.let { adapterComic.setComics(it) }
+        })
     }
 
 
@@ -121,7 +106,6 @@ class MainActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.onStart()
     }
 
 }
